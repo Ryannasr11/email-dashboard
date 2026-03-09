@@ -430,6 +430,11 @@
             const ctx = document.getElementById('spendingChart');
             if (!ctx) return;
             
+            // Destroy existing chart to prevent memory leak
+            if (spendingChartInstance) {
+                spendingChartInstance.destroy();
+            }
+            
             // Expand all categories function
             window.expandAllCategories = function() {
                 document.querySelectorAll('.category-item').forEach(item => {
@@ -438,7 +443,7 @@
                 });
             };
             
-            const chart = new Chart(ctx, {
+            spendingChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: { labels: spendingCategories.map(c => c.name), datasets: [{ data: spendingCategories.map(c => c.amount), backgroundColor: spendingCategories.map(c => c.color), borderWidth: 0 }] },
                 options: { 
@@ -534,6 +539,25 @@
         }
 
         function disconnect() { if (confirm('Disconnect your email account?')) showScreen('landing'); }
+        
+        // Modal close on backdrop click
+        document.getElementById('createModal').addEventListener('click', function(e) {
+            if (e.target === this) closeCreateModal();
+        });
+        
+        // Modal close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('createModal');
+                if (modal.classList.contains('active')) closeCreateModal();
+            }
+        });
+        
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.querySelector('.hamburger-overlay').classList.toggle('active');
+        }
         
         // Button event listeners
         document.getElementById('connectBtn').addEventListener('click', function() { showScreen('providers'); });
