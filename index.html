@@ -192,13 +192,20 @@
         .hamburger-overlay.active { display: block; }
         
         @media (max-width: 768px) {
+            html, body { overflow-x: hidden; }
             .hamburger { display: block; }
             .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
             .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 1rem; padding-top: 4rem; }
-            .dashboard-grid { grid-template-columns: 1fr 1fr; }
-            .stats-row { grid-template-columns: 1fr 1fr; }
+            .main-content { margin-left: 0; padding: 1rem; padding-top: 4rem; max-width: 100%; }
+            .main-content-inner { max-width: 100%; padding: 0; }
+            .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+            .chart-container { max-width: 100%; }
+            .nav-item { padding: 1rem; }
+            .modal { padding: 1.25rem; }
             .dashboard-title { font-size: 1.25rem; }
+            .providers-box { padding: 1.5rem; }
+            .provider-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -217,10 +224,10 @@
             <h2>Choose Your Provider</h2>
             <p>Select your email service</p>
             <div class="provider-grid">
-                <button class="provider-btn" id="gmailBtn"><span>📬</span><span>Gmail</span></button>
-                <button class="provider-btn" id="outlookBtn"><span>📨</span><span>Outlook</span></button>
-                <button class="provider-btn" id="yahooBtn"><span>📯</span><span>Yahoo</span></button>
-                <button class="provider-btn" id="icloudBtn"><span>☁️</span><span>iCloud</span></button>
+                <button class="provider-btn" id="gmailBtn"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"><path d="M3 7l9 6 9-6"></svg></span><span>Gmail</span></button>
+                <button class="provider-btn" id="outlookBtn"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span>Outlook</span></button>
+                <button class="provider-btn" id="yahooBtn"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v10"/><circle cx="12" cy="15" r="4"/></svg></span><span>Yahoo</span></button>
+                <button class="provider-btn" id="icloudBtn"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></span><span>iCloud</span></button>
             </div>
             <button class="back-btn" onclick="showScreen('landing')">← Back</button>
         </div>
@@ -236,7 +243,7 @@
                 <div class="email-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"><path d="M3 7l9 6 9-6"></svg> receipt</span><span>Processing...</span></div>
                 <div class="email-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"><path d="M3 10l9-7 9 7"></svg> booking</span><span>Processing...</span></div>
                 <div class="email-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"><line x1="16" y1="2" x2="16" y2="6"><line x1="8" y1="2" x2="8" y2="6"><line x1="3" y1="10" x2="21" y2="10"></svg> event</span><span>Done</span></div>
-                <div class="email-item"><span>📦 subscription</span><span>Done</span></div>
+                <div class="email-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> subscription</span><span>Done</span></div>
             </div>
         </div>
     </div>
@@ -337,10 +344,10 @@
                 <button class="modal-close" onclick="closeCreateModal()">×</button>
             </div>
             <div class="dashboard-options">
-                <div class="dashboard-option" data-type="fitness" onclick="selectDashboard(this)"><div class="dashboard-option-icon">💪</div><div class="dashboard-option-name">Fitness</div>
-                <div class="dashboard-option" data-type="food" onclick="selectDashboard(this)"><div class="dashboard-option-icon">🍔</div><div class="dashboard-option-name">Food & Dining</div></div>
-                <div class="dashboard-option" data-type="shopping" onclick="selectDashboard(this)"><div class="dashboard-option-icon">🛍️</div><div class="dashboard-option-name">Shopping</div></div>
-                <div class="dashboard-option" data-type="work" onclick="selectDashboard(this)"><div class="dashboard-option-icon">💼</div><div class="dashboard-option-name">Work</div></div>
+                <div class="dashboard-option" data-type="fitness" onclick="selectDashboard(this)"><div class="dashboard-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8V6a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M10 20H6a2 2 0 01-2-2v-6a6 6 0 0112 0v6a2 2 0 01-2 2h-4"/></svg></div><div class="dashboard-option-name">Fitness</div>
+                <div class="dashboard-option" data-type="food" onclick="selectDashboard(this)"><div class="dashboard-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 10h4a4 4 0 014 4v6H2v-6a4 4 0 014-4"/><path d="M8 10V6a4 4 0 018 0v4"/></svg></div><div class="dashboard-option-name">Food & Dining</div></div>
+                <div class="dashboard-option" data-type="shopping" onclick="selectDashboard(this)"><div class="dashboard-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div><div class="dashboard-option-name">Shopping</div></div>
+                <div class="dashboard-option" data-type="work" onclick="selectDashboard(this)"><div class="dashboard-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div><div class="dashboard-option-name">Work</div></div>
             </div>
             <button class="ai-build-btn" onclick="createDashboard()">✨ Create with AI</button>
         </div>
@@ -554,7 +561,7 @@
 
         function createDashboard() {
             const dashboards = JSON.parse(localStorage.getItem('customDashboards') || '[]');
-            const icons = { fitness: '💪', food: '🍔', shopping: '🛍️', work: '💼' };
+            const icons = { fitness: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8V6a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M10 20H6a2 2 0 01-2-2v-6a6 6 0 0112 0v6a2 2 0 01-2 2h-4"/></svg>', food: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 10h4a4 4 0 014 4v6H2v-6a4 4 0 014-4"/><path d="M8 10V6a4 4 0 018 0v4"/></svg>', shopping: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>', work: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>' };
             const names = { fitness: 'Fitness', food: 'Food & Dining', shopping: 'Shopping', work: 'Work' };
             const type = selectedDashboardType || ['fitness', 'food', 'shopping', 'work'][Math.floor(Math.random() * 4)];
             dashboards.push({ id: Date.now(), type, icon: icons[type], name: names[type] });
@@ -596,7 +603,7 @@
                         { name: 'ClassPass', detail: '12 credits remaining', amount: '$45/mo' },
                         { name: 'Nike Run Club', detail: 'Free trial', amount: '$0' }
                     ],
-                    icon: '💪'
+                    icon: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8V6a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M10 20H6a2 2 0 01-2-2v-6a6 6 0 0112 0v6a2 2 0 01-2 2h-4"/></svg>'
                 },
                 food: {
                     stats: [
@@ -611,7 +618,7 @@
                         { name: 'DoorDash', detail: 'Active subscription', amount: '$0/mo' },
                         { name: 'Whole Foods', detail: 'Pickup Mar 9', amount: '$156' }
                     ],
-                    icon: '🍔'
+                    icon: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 10h4a4 4 0 014 4v6H2v-6a4 4 0 014-4"/><path d="M8 10V6a4 4 0 018 0v4"/></svg>'
                 },
                 shopping: {
                     stats: [
@@ -626,7 +633,7 @@
                         { name: 'Nordstrom', detail: '1 order this month', amount: '$67' },
                         { name: 'Best Buy', detail: '1 order this month', amount: '$22' }
                     ],
-                    icon: '🛍️'
+                    icon: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>'
                 },
                 work: {
                     stats: [
@@ -641,7 +648,7 @@
                         { name: 'Notion', detail: 'Billing: Mar 25', amount: '$10/mo' },
                         { name: 'Slack', detail: 'Pro plan', amount: '$0/mo' }
                     ],
-                    icon: '💼'
+                    icon: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>'
                 }
             };
             return data[type] || data.work;
