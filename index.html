@@ -437,13 +437,8 @@
                 spendingChartInstance.destroy();
             }
             
-            // Expand all categories function
-            window.expandAllCategories = function() {
-                document.querySelectorAll('.category-item').forEach(item => {
-                    item.classList.add('active');
-                    item.querySelector('.top-purchases').classList.add('expanded');
-                });
-            };
+            // Track expanded category index
+            let expandedIndex = -1;
             
             spendingChartInstance = new Chart(ctx, {
                 type: 'doughnut',
@@ -451,21 +446,60 @@
                 options: { 
                     responsive: true, 
                     plugins: { 
-                        legend: { position: 'bottom', labels: { color: '#94a3b8' } } 
+                        legend: { position: 'bottom', labels: { color: '#94a3b8' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
                     },
-                    onClick: function() {
-                        window.expandAllCategories();
+                    onClick: (event, elements, chart) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const category = spendingCategories[index];
+                            const categoryItems = document.querySelectorAll('.category-item');
+                            
+                            // Toggle: collapse if already expanded, otherwise expand only this one
+                            if (expandedIndex === index) {
+                                categoryItems[index].classList.remove('active');
+                                categoryItems[index].querySelector('.top-purchases').classList.remove('expanded');
+                                expandedIndex = -1;
+                            } else {
+                                // Collapse all first
+                                categoryItems.forEach((item, i) => {
+                                    item.classList.remove('active');
+                                    item.querySelector('.top-purchases').classList.remove('expanded');
+                                });
+                                // Expand only the clicked one
+                                categoryItems[index].classList.add('active');
+                                categoryItems[index].querySelector('.top-purchases').classList.add('expanded');
+                                expandedIndex = index;
+                            }
+                            
+                            // Show a toast notification for the clicked category
+                            showToast(`${category.name}: $${category.amount.toLocaleString()} (${category.purchases.length} purchases)`);
+                        }
                     }
                 }
             });
             
-            // Add click to chart canvas for alert/expand
+            // Add click to chart canvas
             ctx.style.cursor = 'pointer';
-            ctx.addEventListener('click', function() {
-                // Show alert first, then expand
-                alert('Click on categories below to see purchases');
-                window.expandAllCategories();
-            });
+        }
+
+        function showToast(message) {
+            // Remove existing toast
+            const existing = document.querySelector('.toast-notification');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; z-index: 2000; animation: fadeInUp 0.3s ease-out;';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
         function renderSubscriptions() {
@@ -531,7 +565,124 @@
         }
 
         function openCustomDashboard(name) {
-            alert('Custom dashboard: ' + name + ' - Coming soon!');
+            // Show detailed modal with mock data for the dashboard type
+            const type = name.toLowerCase().includes('fitness') ? 'fitness' : 
+                         name.toLowerCase().includes('food') ? 'food' : 
+                         name.toLowerCase().includes('shopping') ? 'shopping' : 'work';
+            
+            const mockData = getMockDashboardData(type);
+            showCustomDashboardModal(name, mockData);
+        }
+
+        function getMockDashboardData(type) {
+            const data = {
+                fitness: {
+                    stats: [
+                        { label: 'This Month', value: '$127' },
+                        { label: 'Classes', value: '12' },
+                        { label: 'Streak', value: '7 days' },
+                        { label: 'Goal', value: '75%' }
+                    ],
+                    items: [
+                        { name: 'Barry\'s Bootcamp', detail: 'Next: Mar 10, 6:00 AM', amount: '$28' },
+                        { name: 'SoulCycle', detail: 'Next: Mar 11, 7:30 AM', amount: '$24' },
+                        { name: 'ClassPass', detail: '12 credits remaining', amount: '$45/mo' },
+                        { name: 'Nike Run Club', detail: 'Free trial', amount: '$0' }
+                    ],
+                    icon: '💪'
+                },
+                food: {
+                    stats: [
+                        { label: 'This Month', value: '$623' },
+                        { label: 'Orders', value: '18' },
+                        { label: 'Restaurants', value: '9' },
+                        { label: 'Avg Order', value: '$35' }
+                    ],
+                    items: [
+                        { name: 'Chipotle', detail: 'Ordered 4 times', amount: '$96' },
+                        { name: 'Sweetgreen', detail: 'Ordered 3 times', amount: '$78' },
+                        { name: 'DoorDash', detail: 'Active subscription', amount: '$0/mo' },
+                        { name: 'Whole Foods', detail: 'Pickup Mar 9', amount: '$156' }
+                    ],
+                    icon: '🍔'
+                },
+                shopping: {
+                    stats: [
+                        { label: 'This Month', value: '$412' },
+                        { label: 'Orders', value: '7' },
+                        { label: 'Returns', value: '1' },
+                        { label: 'Saved', value: '$45' }
+                    ],
+                    items: [
+                        { name: 'Amazon', detail: '3 orders this month', amount: '$234' },
+                        { name: 'Target', detail: '2 orders this month', amount: '$89' },
+                        { name: 'Nordstrom', detail: '1 order this month', amount: '$67' },
+                        { name: 'Best Buy', detail: '1 order this month', amount: '$22' }
+                    ],
+                    icon: '🛍️'
+                },
+                work: {
+                    stats: [
+                        { label: 'Monthly', value: '$89' },
+                        { label: 'Tools', value: '6' },
+                        { label: 'Projects', value: '4' },
+                        { label: 'Team Size', value: '3' }
+                    ],
+                    items: [
+                        { name: 'GitHub Pro', detail: 'Billing: Mar 22', amount: '$4/mo' },
+                        { name: 'Figma', detail: 'Billing: Mar 28', amount: '$15/mo' },
+                        { name: 'Notion', detail: 'Billing: Mar 25', amount: '$10/mo' },
+                        { name: 'Slack', detail: 'Pro plan', amount: '$0/mo' }
+                    ],
+                    icon: '💼'
+                }
+            };
+            return data[type] || data.work;
+        }
+
+        function showCustomDashboardModal(name, data) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.id = 'customDashModal';
+            modal.onclick = function(e) { if (e.target === this) closeCustomDashboardModal(); };
+            
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 550px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">${data.icon} ${name}</h2>
+                        <button class="modal-close" onclick="closeCustomDashboardModal()">×</button>
+                    </div>
+                    <div class="stats-row" style="margin-bottom: 1.5rem;">
+                        ${data.stats.map(s => `
+                            <div class="stat-card">
+                                <div class="stat-label">${s.label}</div>
+                                <div class="stat-value">${s.value}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="list-section">
+                        <div class="list-title">Recent Activity</div>
+                        ${data.items.map(item => `
+                            <div class="list-item">
+                                <div class="list-icon" style="background: rgba(99, 102, 241, 0.2); color: #818cf8">${data.icon}</div>
+                                <div class="list-content">
+                                    <div class="list-name">${item.name}</div>
+                                    <div class="list-detail">${item.detail}</div>
+                                </div>
+                                <div class="list-amount">${item.amount}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 1rem;" onclick="closeCustomDashboardModal()">Close</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeCustomDashboardModal() {
+            const modal = document.getElementById('customDashModal');
+            if (modal) modal.remove();
         }
 
         function deleteDashboard(id) {
