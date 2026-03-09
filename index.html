@@ -317,7 +317,7 @@
                     <div class="settings-title">Preferences</div>
                     <div class="settings-item"><div><div class="settings-label">Dark Mode</div><div class="settings-desc">Use dark theme</div></div><div class="toggle active" id="toggleDarkMode" onclick="toggleSetting('darkMode', this)"></div></div>
                     <div class="settings-item"><div><div class="settings-label">Email Notifications</div><div class="settings-desc">Get alerts for new insights</div></div><div class="toggle active" id="toggleNotifications" onclick="toggleSetting('notifications', this)"></div></div>
-                    <div class="settings-item"><div><div class="settings-label">Weekly Summary</div><div class="settings-desc">Receive weekly digest</div></div><div class="toggle" onclick="this.classList.toggle('active')"></div></div>
+                    <div class="settings-item"><div><div class="settings-label">Weekly Summary</div><div class="settings-desc">Receive weekly digest</div></div><div class="toggle" id="toggleWeeklySummary" onclick="toggleSetting('weeklySummary', this)"></div></div>
                 </div>
             </div>
         </div>
@@ -574,6 +574,7 @@
             const settings = JSON.parse(localStorage.getItem('settings') || '{}');
             if (settings.darkMode === false) document.getElementById('toggleDarkMode')?.classList.remove('active');
             if (settings.notifications === false) document.getElementById('toggleNotifications')?.classList.remove('active');
+            if (settings.weeklySummary === false) document.getElementById('toggleWeeklySummary')?.classList.remove('active');
         });
         
         // Close sidebar on mobile when navigating
