@@ -7,450 +7,487 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary: #6366f1; --primary-light: #818cf8; --secondary: #a855f7; --accent: #f472b6;
-            --green: #10b981; --green-light: #34d399; --red: #ef4444; --orange: #f97316;
-            --bg-deep: #030712; --bg-primary: #0a0f1a; --bg-secondary: #111827; --bg-card: #1a2234;
-            --bg-card-hover: #232d42; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b;
-            --border: #2d3748; --border-light: #374151;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3); --shadow-md: 0 4px 16px rgba(0,0,0,0.4); --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
-            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
-            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --gradient-bg: linear-gradient(180deg, #030712 0%, #0a0f1a 50%, #111827 100%);
-            --gradient-card: linear-gradient(145deg, #1a2234 0%, #151d2e 100%);
-            --gradient-accent: linear-gradient(135deg, #6366f1 0%, #f472b6 100%);
-            --glass: rgba(26, 34, 52, 0.7); --glass-border: rgba(255,255,255,0.08);
-        }
-        :root.light { 
-            --primary: #6366f1; --primary-light: #818cf8; --secondary: #a855f7; --accent: #f472b6;
-            --green: #10b981; --green-light: #34d399; --red: #ef4444; --orange: #f97316;
-            --bg-deep: #f8fafc; --bg-primary: #ffffff; --bg-secondary: #f1f5f9; --bg-card: #ffffff;
-            --bg-card-hover: #f8fafc; --text-primary: #0f172a; --text-secondary: #475569; --text-muted: #94a3b8;
-            --border: #e2e8f0; --border-light: #cbd5e1;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05); --shadow-md: 0 4px 16px rgba(0,0,0,0.08); --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.1);
-            --gradient-bg: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-            --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            --glass: rgba(255, 255, 255, 0.8); --glass-border: rgba(0,0,0,0.08);
-        }
+        :root { --primary: #6366f1; --primary-light: #818cf8; --secondary: #a855f7; --accent: #f472b6; --green: #10b981; --red: #ef4444; --orange: #f97316; --bg-deep: #030712; --bg-card: #1a2234; --bg-card-hover: #232d42; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b; --border: #2d3748; --gradient-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); --gradient-bg: linear-gradient(180deg, #030712 0%, #0a0f1a 50%, #111827 100%); --gradient-card: linear-gradient(145deg, #1a2234 0%, #151d2e 100%); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-deep); color: var(--text-primary); min-height: 100vh; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
         .screen { display: none; min-height: 100vh; animation: fadeIn 0.5s ease-out; }
         .screen.active { display: flex; flex-direction: column; }
         
-        #landing { 
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); 
-            justify-content: center; align-items: center; text-align: center; padding: 2rem;
-            position: relative; overflow: hidden;
-        }
-        #landing::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
-        }
+        #landing { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; overflow: hidden; }
+        #landing::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.15), transparent 50%), radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.15), transparent 50%); }
         .logo { font-size: 4rem; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite; position: relative; }
         .landing { position: relative; z-index: 1; }
-        .landing h1 { 
-            color: white; font-size: 3rem; font-weight: 800; margin-bottom: 1rem; 
-            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: fadeInUp 0.6s ease-out 0.2s both;
-        }
+        .landing h1 { color: white; font-size: 3rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: fadeInUp 0.6s ease-out 0.2s both; }
         .landing p { color: rgba(255,255,255,0.8); font-size: 1.15rem; margin-bottom: 2rem; line-height: 1.7; max-width: 520px; animation: fadeInUp 0.6s ease-out 0.4s both; }
-        .btn { 
-            padding: 1rem 2.5rem; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; 
-            border: none; background: var(--gradient-primary); color: white; position: relative; overflow: hidden;
-            animation: fadeInUp 0.6s ease-out 0.6s both; transition: all 0.3s ease;
-        }
-        .btn::before {
-            content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%); transition: transform 0.5s ease;
-        }
+        .btn { padding: 1rem 2.5rem; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; background: var(--gradient-primary); color: white; animation: fadeInUp 0.6s ease-out 0.6s both; transition: all 0.3s; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); }
-        .btn:hover::before { transform: translateX(100%); }
         
-        /* Modal Styles */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center;
-            animation: fadeIn 0.2s ease-out;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
-            padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
-            animation: fadeInUp 0.3s ease-out;
-        }
+        .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; max-width: 500px; width: 90%; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.5rem; font-weight: 700; }
-        .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; }
-        .modal-close:hover { color: var(--red); }
-        
-        /* Create Dashboard Styles */
+        .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
         .dashboard-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-        .dashboard-option {
-            background: var(--bg-card-hover); border: 2px solid var(--border); border-radius: 14px;
-            padding: 1.25rem; cursor: pointer; transition: all 0.3s; text-align: center;
-        }
-        .dashboard-option:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .dashboard-option { background: var(--bg-card-hover); border: 2px solid var(--border); border-radius: 14px; padding: 1.25rem; cursor: pointer; transition: all 0.3s; text-align: center; }
+        .dashboard-option:hover { border-color: var(--primary); }
         .dashboard-option.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
         .dashboard-option-icon { font-size: 2rem; margin-bottom: 0.5rem; }
         .dashboard-option-name { font-weight: 600; font-size: 0.95rem; }
-        
-        .ai-build-btn {
-            width: 100%; padding: 1rem; background: var(--gradient-accent); border: none;
-            border-radius: 14px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer;
-            transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-        }
-        .ai-build-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244, 114, 182, 0.35); }
-        
-        .create-dashboard-btn {
-            padding: 0.75rem 1.5rem; background: var(--gradient-primary); border: none;
-            border-radius: 12px; color: white; font-weight: 600; cursor: pointer;
-            transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .create-dashboard-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35); }
-        
-        /* Subscription Cancel Button */
-        .cancel-btn {
-            background: rgba(239, 68, 68, 0.1); color: var(--red); border: none;
-            padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; margin-left: 0.5rem;
-        }
-        .cancel-btn:hover { background: rgba(239, 68, 68, 0.2); }
-        
-        /* Spending Category Expand */
-        .category-item {
-            cursor: pointer; transition: all 0.3s ease; border-radius: 12px;
-        }
-        .category-item:hover { background: var(--bg-card-hover); transform: translateX(6px); }
-        .category-item.active {
-            background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary-light);
-        }
-        .category-item.active .list-icon { transform: scale(1.1); }
-        
-        .top-purchases {
-            max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s ease;
-        }
-        .top-purchases.expanded {
-            max-height: 500px; opacity: 1; margin-top: 1rem;
-        }
-        .purchase-item {
-            display: flex; justify-content: space-between; padding: 0.75rem 1rem;
-            background: var(--bg-secondary); border-radius: 8px; margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-        .purchase-merchant { color: var(--text-secondary); }
-        .purchase-amount { font-weight: 600; }
+        .ai-build-btn { width: 100%; padding: 1rem; background: var(--gradient-primary); border: none; border-radius: 14px; color: white; font-weight: 600; cursor: pointer; }
         
         #providers { background: var(--gradient-bg); justify-content: center; align-items: center; text-align: center; padding: 2rem; }
-        .providers-box { 
-            background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
-            border-radius: 24px; padding: 2.5rem; box-shadow: var(--shadow-lg); max-width: 480px;
-            animation: fadeInUp 0.5s ease-out;
-        }
-        .providers-box h2 { text-align: center; margin-bottom: 0.5rem; font-size: 1.75rem; font-weight: 700; }
-        .providers-box > p { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; }
+        .providers-box { background: rgba(26, 34, 52, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 2.5rem; max-width: 480px; }
+        .providers-box h2 { margin-bottom: 0.5rem; font-size: 1.75rem; }
+        .providers-box > p { color: var(--text-secondary); margin-bottom: 2rem; }
         .provider-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        .provider-btn { 
-            display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem; 
-            background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .provider-btn:hover { 
-            border-color: var(--primary); background: var(--bg-card-hover); 
-            transform: translateY(-3px); box-shadow: var(--shadow-md);
-        }
+        .provider-btn { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem; background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; cursor: pointer; transition: all 0.3s; }
+        .provider-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
         .provider-btn span:first-child { font-size: 2rem; }
-        .provider-btn span:last-child { font-weight: 600; color: var(--text-primary); }
-        .back-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; margin-top: 1.5rem; padding: 0.5rem 1rem; transition: color 0.2s; }
-        .back-btn:hover { color: var(--primary); }
+        .provider-btn span:last-child { font-weight: 600; }
+        .back-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; margin-top: 1.5rem; }
         
-        #processing { 
-            background: linear-gradient(135deg, #0f172a, #1e1b4b); 
-            justify-content: center; align-items: center; text-align: center;
-        }
+        #processing { background: linear-gradient(135deg, #0f172a, #1e1b4b); justify-content: center; align-items: center; text-align: center; }
         .scanner { width: 180px; height: 180px; margin: 0 auto 2.5rem; position: relative; }
-        .scanner-ring { 
-            position: absolute; inset: 0; border: 3px solid rgba(255,255,255,0.15); 
-            border-top-color: #818cf8; border-radius: 50%; animation: spin 1.5s linear infinite;
-        }
+        .scanner-ring { position: absolute; inset: 0; border: 3px solid rgba(255,255,255,0.15); border-top-color: #818cf8; border-radius: 50%; animation: spin 1.5s linear infinite; }
         .scanner-ring:nth-child(2) { inset: 15px; animation-duration: 2s; animation-direction: reverse; }
-        .scanner-icon { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-size: 3rem; animation: pulse 2s ease-in-out infinite;
-        }
-        .processing h2 { color: white; margin-bottom: 0.75rem; font-size: 2rem; font-weight: 700; }
+        .scanner-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; animation: pulse 2s ease-in-out infinite; }
+        .processing h2 { color: white; margin-bottom: 0.75rem; font-size: 2rem; }
         .processing p { color: rgba(255,255,255,0.6); margin-bottom: 2rem; }
         .progress-bar { width: 280px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; margin: 0 auto; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); border-radius: 3px; animation: progress 2.5s ease-in-out infinite; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); animation: progress 2.5s ease-in-out infinite; }
         @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
-        
         .email-list { margin-top: 2rem; text-align: left; max-width: 340px; margin: 2rem auto 0; }
-        .email-item { 
-            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; 
-            background: rgba(255,255,255,0.08); border-radius: 10px; margin-bottom: 0.6rem;
-            opacity: 0; animation: slideInLeft 0.4s forwards;
-        }
+        .email-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.08); border-radius: 10px; margin-bottom: 0.6rem; opacity: 0; animation: slideInLeft 0.4s forwards; }
         .email-item:nth-child(1) { animation-delay: 0.5s; }
         .email-item:nth-child(2) { animation-delay: 1s; }
         .email-item:nth-child(3) { animation-delay: 1.5s; }
         .email-item:nth-child(4) { animation-delay: 2s; }
-        .email-item span:first-child { font-size: 1.25rem; }
         .email-item span:last-child { margin-left: auto; color: #34d399; }
         
         #dashboard-view { background: var(--gradient-bg); min-height: 100vh; }
-        
-        .sidebar { 
-            position: fixed; left: 0; top: 0; bottom: 0; width: 260px; 
-            background: var(--bg-card); border-right: 1px solid var(--border);
-            padding: 1.5rem; display: flex; flex-direction: column; z-index: 100;
-            transition: transform 0.3s ease;
-        }
-        .sidebar-logo { 
-            font-size: 1.5rem; font-weight: 800; color: var(--primary); 
-            margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;
-        }
-        .nav-item { 
-            padding: 0.875rem 1rem; border-radius: 12px; cursor: pointer; 
-            color: var(--text-secondary); font-weight: 500; margin-bottom: 0.35rem;
-            transition: all 0.25s ease; display: flex; align-items: center; gap: 0.75rem;
-        }
-        .nav-item:hover { 
-            background: var(--bg-card-hover); color: var(--text-primary); 
-            transform: translateX(4px);
-        }
-        .nav-item.active { 
-            background: var(--gradient-primary); color: white;
-            box-shadow: 0 4px 15px 102, 241, 0 rgba(99,.35);
-        }
-        .nav-item span:first-child { font-size: 1.1rem; }
-        
+        .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: var(--bg-card); border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; z-index: 100; }
+        .sidebar-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; }
+        .nav-item { padding: 0.875rem 1rem; border-radius: 12px; cursor: pointer; color: var(--text-secondary); font-weight: 500; margin-bottom: 0.35rem; transition: all 0.25s; display: flex; align-items: center; gap: 0.75rem; }
+        .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); transform: translateX(4px); }
+        .nav-item.active { background: var(--gradient-primary); color: white; }
         .sidebar-footer { margin-top: auto; padding-top: 1.25rem; border-top: 1px solid var(--border); }
         .user-info { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 12px; }
-        .user-info:hover { background: var(--bg-card-hover); }
-        .avatar { 
-            width: 42px; height: 42px; border-radius: 12px; 
-            background: var(--gradient-accent); display: flex; align-items: center; justify-content: center; 
-            color: white; font-weight: 700; font-size: 0.9rem; 
-        }
+        .avatar { width: 42px; height: 42px; border-radius: 12px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
         .user-name { font-weight: 600; font-size: 0.95rem; }
         .user-email { font-size: 0.8rem; color: var(--text-muted); }
+        .main-content { margin-left: 260px; padding: 2rem; min-height: 100vh; }
         
-        .main-content { margin-left: 260px; padding: 2rem; min-height: 100vh; position: relative; }
-        
-        .detail-view { display: none; animation: fadeIn 0.4s ease-out; }
-        .detail-view.active { display: block; }
-        
-        .detail-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .back-to-dash { 
-            color: var(--text-secondary); cursor: pointer; font-size: 0.95rem; 
-            padding: 0.5rem 0.75rem; border-radius: 8px; transition: all 0.2s;
-        }
-        .back-to-dash:hover { color: var(--primary); background: var(--bg-card); }
-        
-        .dashboard-header { margin-bottom: 2rem; position: relative; }
+        .dashboard-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
         .dashboard-title { font-size: 1.75rem; font-weight: 700; }
-        .dashboard-subtitle { color: var(--text-secondary); font-size: 1rem; margin-top: 0.35rem; }
+        .create-dashboard-btn { padding: 0.75rem 1.5rem; background: var(--gradient-primary); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; }
         
-        .dashboard-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; 
-        }
-        
-        .dash-card { 
-            background: var(--gradient-card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 1.5rem; box-shadow: var(--shadow-sm); 
-            cursor: pointer; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden;
-            opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s ease-out forwards;
-        }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+        .dash-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; cursor: pointer; transition: all 0.35s; opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s ease-out forwards; }
         .dash-card:nth-child(1) { animation-delay: 0.1s; }
         .dash-card:nth-child(2) { animation-delay: 0.2s; }
         .dash-card:nth-child(3) { animation-delay: 0.3s; }
         .dash-card:nth-child(4) { animation-delay: 0.4s; }
-        .dash-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: var(--gradient-primary); opacity: 0; transition: opacity 0.3s;
-        }
-        .dash-card:hover { 
-            transform: translateY(-6px) scale(1.02); box-shadow: var(--shadow-lg), var(--shadow-glow);
-            border-color: var(--primary-light);
-        }
-        .dash-card:hover::before { opacity: 1; }
-        
-        .dash-card-icon { 
-            width: 48px; height: 48px; border-radius: 14px; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-            margin-bottom: 1rem; transition: transform 0.3s ease;
-        }
-        .dash-card:hover .dash-card-icon { transform: scale(1.15); }
+        .dash-card:hover { transform: translateY(-6px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); border-color: var(--primary-light); }
+        .dash-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
         .dash-card:nth-child(1) .dash-card-icon { background: linear-gradient(135deg, #10b981, #34d399); }
         .dash-card:nth-child(2) .dash-card-icon { background: linear-gradient(135deg, #6366f1, #818cf8); }
         .dash-card:nth-child(3) .dash-card-icon { background: linear-gradient(135deg, #f97316, #fb923c); }
         .dash-card:nth-child(4) .dash-card-icon { background: linear-gradient(135deg, #f472b6, #f9a8d4); }
-        
-        .dash-card-value { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+        .dash-card-value { font-size: 2rem; font-weight: 800; }
         .dash-card-label { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.35rem; }
-        .dash-card-trend { font-size: 0.85rem; margin-top: 0.75rem; display: flex; align-items: center; gap: 0.35rem; }
-        .trend-up { color: var(--green); }
-        .trend-down { color: var(--red); }
+        
+        .detail-view { display: none; animation: fadeIn 0.4s ease-out; }
+        .detail-view.active { display: block; }
+        .detail-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .back-to-dash { color: var(--text-secondary); cursor: pointer; padding: 0.5rem 0.75rem; border-radius: 8px; transition: all 0.2s; }
+        .back-to-dash:hover { color: var(--primary); background: var(--bg-card); }
         
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-        .stat-card { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; 
-            padding: 1.25rem; box-shadow: var(--shadow-sm); transition: all 0.3s;
-            opacity: 0; transform: translateY(15px); animation: fadeInUp 0.4s ease-out forwards;
-        }
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.15s; }
-        .stat-card:nth-child(3) { animation-delay: 0.2s; }
-        .stat-card:nth-child(4) { animation-delay: 0.25s; }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
         .stat-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
         .stat-value { font-size: 1.5rem; font-weight: 700; }
         
-        .chart-container { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; 
-            padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; 
-            max-width: 380px; margin-left: auto; margin-right: auto;
-        }
-        .chart-title { font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem; }
-        .chart-container canvas { max-height: 280px !important; }
+        .chart-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; max-width: 380px; }
+        .chart-title { font-weight: 600; margin-bottom: 1rem; }
         
-        .list-section { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; 
-            padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 1rem; 
-            opacity: 0; transform: translateY(15px); animation: fadeInUp 0.5s ease-out 0.3s forwards;
-        }
+        .list-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
         .list-title { font-weight: 600; margin-bottom: 1rem; }
-        
-        .list-item { 
-            display: flex; align-items: center; gap: 1rem; padding: 1rem; 
-            border-radius: 12px; transition: all 0.25s ease;
-        }
+        .list-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; transition: all 0.25s; }
         .list-item:hover { background: var(--bg-card-hover); transform: translateX(6px); }
-        .list-icon { 
-            width: 44px; height: 44px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
-        }
+        .list-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
         .list-content { flex: 1; }
         .list-name { font-weight: 600; font-size: 0.95rem; }
         .list-detail { font-size: 0.8rem; color: var(--text-muted); }
         .list-amount { font-weight: 700; font-size: 1rem; }
         
+        .category-item { cursor: pointer; transition: all 0.3s; border-radius: 12px; }
+        .category-item:hover { background: var(--bg-card-hover); transform: translateX(6px); }
+        .category-item.active { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary-light); }
+        .top-purchases { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s; }
+        .top-purchases.expanded { max-height: 500px; opacity: 1; margin-top: 1rem; }
+        .purchase-item { display: flex; justify-content: space-between; padding: 0.75rem 1rem; background: #111827; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .purchase-merchant { color: var(--text-secondary); }
+        .purchase-amount { font-weight: 600; }
+        
         .sub-badge { padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
         .sub-active { background: rgba(16, 185, 129, 0.15); color: var(--green); }
+        .cancel-btn { background: rgba(239, 68, 68, 0.1); color: var(--red); border: none; padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; margin-left: 0.5rem; }
+        .cancel-btn:hover { background: rgba(239, 68, 68, 0.2); }
         
-        .trip-card { 
-            display: flex; gap: 1.25rem; padding: 1.25rem; 
-            background: var(--bg-card-hover); border-radius: 14px; margin-bottom: 0.75rem;
-            transition: all 0.3s ease; border: 1px solid transparent;
-        }
-        .trip-card:hover { border-color: var(--primary); transform: translateX(6px); box-shadow: var(--shadow-glow); }
-        .trip-dates { 
-            min-width: 65px; text-align: center; padding: 0.75rem; 
-            background: var(--gradient-primary); border-radius: 10px; color: white;
-        }
+        .trip-card { display: flex; gap: 1.25rem; padding: 1.25rem; background: var(--bg-card-hover); border-radius: 14px; margin-bottom: 0.75rem; transition: all 0.3s; border: 1px solid transparent; }
+        .trip-card:hover { border-color: var(--primary); transform: translateX(6px); }
+        .trip-dates { min-width: 65px; text-align: center; padding: 0.75rem; background: var(--gradient-primary); border-radius: 10px; color: white; }
         .trip-month { font-size: 0.7rem; text-transform: uppercase; opacity: 0.85; }
         .trip-day { font-size: 1.5rem; font-weight: 800; }
-        .trip-destination { font-weight: 600; margin-bottom: 0.3rem; font-size: 1.05rem; }
+        .trip-destination { font-weight: 600; margin-bottom: 0.3rem; }
         .trip-details { font-size: 0.85rem; color: var(--text-muted); }
         
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
         .calendar-header { text-align: center; font-weight: 600; font-size: 0.75rem; color: var(--text-muted); padding: 0.5rem; }
-        .calendar-day { 
-            padding: 0.75rem; text-align: center; border-radius: 10px; cursor: pointer; 
-            font-size: 0.9rem; transition: all 0.2s; color: var(--text-secondary);
-        }
-        .calendar-day.empty { background: transparent; cursor: default; }
-        .calendar-day.empty:hover { background: transparent; }
+        .calendar-day { padding: 0.75rem; text-align: center; border-radius: 10px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; color: var(--text-secondary); }
         .calendar-day:hover { background: var(--bg-card-hover); color: var(--text-primary); }
-        .calendar-day.today { 
-            background: var(--gradient-primary); color: white; font-weight: 700;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
-        }
-        .calendar-day.has-event { position: relative; }
-        .calendar-day.has-event::after { 
-            content: ''; display: block; width: 5px; height: 5px; 
-            background: var(--accent); border-radius: 50%; margin: 3px auto 0; 
-        }
+        .calendar-day.today { background: var(--gradient-primary); color: white; font-weight: 700; }
+        .calendar-day.has-event::after { content: ''; display: block; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; margin: 3px auto 0; }
         
-        .event-item { 
-            display: flex; gap: 1.25rem; padding: 1rem; 
-            border-left: 3px solid var(--primary); 
-            background: var(--bg-card-hover); border-radius: 0 10px 10px 0; margin-bottom: 0.6rem;
-            transition: all 0.2s;
-        }
-        .event-item:hover { transform: translateX(4px); border-left-color: var(--accent); }
+        .event-item { display: flex; gap: 1.25rem; padding: 1rem; border-left: 3px solid var(--primary); background: var(--bg-card-hover); border-radius: 0 10px 10px 0; margin-bottom: 0.6rem; }
         .event-time { font-weight: 700; color: var(--primary); font-size: 0.9rem; min-width: 65px; }
-        .event-name { font-weight: 600; font-size: 0.95rem; }
+        .event-name { font-weight: 600; }
         .event-source { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
         
-        .ai-input-container { display: flex; gap: 0.75rem; margin-top: 1rem; }
-        .ai-input { 
-            flex: 1; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 14px;
-            background: var(--bg-card); color: var(--text-primary); font-size: 0.95rem;
-            transition: all 0.3s; font-family: inherit;
-        }
-        .ai-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
-        .ai-btn { 
-            padding: 1rem 1.75rem; background: var(--gradient-primary); color: white; 
-            border: none; border-radius: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.3s;
-        }
-        .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35); }
-        
-        .ai-response { 
-            margin-top: 1.25rem; padding: 1.5rem; 
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
-            border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 14px; 
-            animation: fadeInUp 0.4s ease-out;
-        }
-        .ai-response-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-weight: 600; }
-        
-        .settings-section { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; 
-            padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 1rem; 
-        }
+        .settings-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
         .settings-title { font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-        .settings-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 1rem 0; border-bottom: 1px solid var(--border);
-        }
+        .settings-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border); }
         .settings-item:last-child { border: none; }
         .settings-label { font-weight: 500; }
         .settings-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; }
-        
-        .toggle { 
-            width: 48px; height: 26px; background: var(--border); border-radius: 13px; 
-            position: relative; cursor: pointer; transition: all 0.3s;
-        }
+        .toggle { width: 48px; height: 26px; background: var(--border); border-radius: 13px; position: relative; cursor: pointer; transition: all 0.3s; }
         .toggle.active { background: var(--primary); }
-        .toggle::after { 
-            content: ''; position: absolute; width: 20px; height: 20px; 
-            background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.25s;
-        }
+        .toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.25s; }
         .toggle.active::after { left: 25px; }
+        .disconnect-btn { background: rgba(239, 68, 68, 0.1); color: var(--red); border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
         
-        .disconnect-btn { 
-            background: rgba(239, 68, 68, 0.1); color: var(--red); 
-            border: none; padding: 0.6rem 1.25rem; border-radius: 8px; 
-            font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
-        .disconnect-btn:hover { background: rgba(239, 68, 68, 0.2); }
-        
-        /* Custom Dashboards Section */
         .custom-dashboards { margin-top: 2rem; }
         .custom-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .custom-dash-title { font-weight: 600; font-size: 1.1rem; }
-        
         .custom-dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-        .custom-dash-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius:
+        .custom-dash-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
+        .custom-dash-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .custom-dash-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .custom-dash-name { font-weight: 600; }
+        .custom-dash-delete { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: var(--red); cursor: pointer; font-size: 1.25rem; opacity: 0; transition: opacity 0.2s; }
+        .custom-dash-card:hover .custom-dash-delete { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div id="landing" class="screen active">
+        <div class="landing">
+            <div class="logo">📧</div>
+            <h1>MailSight</h1>
+            <p>Transform your inbox into actionable insights. Connect your email to discover spending, subscriptions, travel, and events.</p>
+            <button class="btn" onclick="showScreen('providers')">Connect Your Email</button>
+        </div>
+    </div>
+
+    <div id="providers" class="screen">
+        <div class="providers-box">
+            <h2>Choose Your Provider</h2>
+            <p>Select your email service</p>
+            <div class="provider-grid">
+                <button class="provider-btn" onclick="connectProvider('Gmail')"><span>📬</span><span>Gmail</span></button>
+                <button class="provider-btn" onclick="connectProvider('Outlook')"><span>📨</span><span>Outlook</span></button>
+                <button class="provider-btn" onclick="connectProvider('Yahoo')"><span>📯</span><span>Yahoo</span></button>
+                <button class="provider-btn" onclick="connectProvider('iCloud')"><span>☁️</span><span>iCloud</span></button>
+            </div>
+            <button class="back-btn" onclick="showScreen('landing')">← Back</button>
+        </div>
+    </div>
+
+    <div id="processing" class="screen">
+        <div class="processing">
+            <div class="scanner"><div class="scanner-ring"></div><div class="scanner-ring"></div><div class="scanner-icon">🤖</div></div>
+            <h2>Analyzing Your Emails</h2>
+            <p>This will only take a moment...</p>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div class="email-list">
+                <div class="email-item"><span>📧 receipt</span><span>Processing...</span></div>
+                <div class="email-item"><span>✈️ booking</span><span>Processing...</span></div>
+                <div class="email-item"><span>📅 event</span><span>Done</span></div>
+                <div class="email-item"><span>📦 subscription</span><span>Done</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="screen">
+        <div class="sidebar">
+            <div class="sidebar-logo">📧 MailSight</div>
+            <div class="nav-item active" onclick="showDashboardHome()"><span>🏠</span> Home</div>
+            <div class="nav-item" onclick="showDetail('spending')"><span>💳</span> Spending</div>
+            <div class="nav-item" onclick="showDetail('subscriptions')"><span>🔄</span> Subscriptions</div>
+            <div class="nav-item" onclick="showDetail('travel')"><span>✈️</span> Travel</div>
+            <div class="nav-item" onclick="showDetail('calendar')"><span>📅</span> Calendar</div>
+            <div class="nav-item" onclick="showDetail('settings')"><span>⚙️</span> Settings</div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">RN</div>
+                    <div><div class="user-name">Ryan Nasr</div><div class="user-email">ryan@example.com</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div id="dash-home" class="detail-view active">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Your Dashboard</h1>
+                    <button class="create-dashboard-btn" onclick="openCreateModal()">+ Create Dashboard</button>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dash-card" onclick="showDetail('spending')"><div class="dash-card-icon">💳</div><div class="dash-card-value">$2,847</div><div class="dash-card-label">Total Spending</div></div>
+                    <div class="dash-card" onclick="showDetail('subscriptions')"><div class="dash-card-icon">🔄</div><div class="dash-card-value">8</div><div class="dash-card-label">Active Subscriptions</div></div>
+                    <div class="dash-card" onclick="showDetail('travel')"><div class="dash-card-icon">✈️</div><div class="dash-card-value">2</div><div class="dash-card-label">Upcoming Trips</div></div>
+                    <div class="dash-card" onclick="showDetail('calendar')"><div class="dash-card-icon">📅</div><div class="dash-card-value">12</div><div class="dash-card-label">This Month</div></div>
+                </div>
+                <div class="custom-dashboards" id="customDashboards"></div>
+            </div>
+            
+            <div id="spending-detail" class="detail-view">
+                <div class="detail-header"><span class="back-to-dash" onclick="showDashboardHome()">← Back</span><h1 class="dashboard-title">Spending</h1></div>
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value">$2,847</div></div>
+                    <div class="stat-card"><div class="stat-label">Last Month</div><div class="stat-value">$3,124</div></div>
+                    <div class="stat-card"><div class="stat-label">Avg. Daily</div><div class="stat-value">$95</div></div>
+                    <div class="stat-card"><div class="stat-label">Budget</div><div class="stat-value">$3,500</div></div>
+                </div>
+                <div class="chart-container"><div class="chart-title">Spending by Category</div><canvas id="spendingChart"></canvas></div>
+                <div class="list-section"><div class="list-title">Categories (click to expand)</div><div id="spending-categories"></div></div>
+            </div>
+            
+            <div id="subscriptions-detail" class="detail-view">
+                <div class="detail-header"><span class="back-to-dash" onclick="showDashboardHome()">← Back</span><h1 class="dashboard-title">Subscriptions</h1></div>
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-label">Monthly</div><div class="stat-value">$127</div></div>
+                    <div class="stat-card"><div class="stat-label">Yearly</div><div class="stat-value">$1,524</div></div>
+                    <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value">8</div></div>
+                    <div class="stat-card"><div class="stat-label">Unused</div><div class="stat-value">2</div></div>
+                </div>
+                <div class="list-section"><div class="list-title">Active Subscriptions</div><div id="subscriptions-list"></div></div>
+            </div>
+            
+            <div id="travel-detail" class="detail-view">
+                <div class="detail-header"><span class="back-to-dash" onclick="showDashboardHome()">← Back</span><h1 class="dashboard-title">Travel</h1></div>
+                <div class="list-section"><div class="list-title">Upcoming Trips</div><div id="trips-list"></div></div>
+            </div>
+            
+            <div id="calendar-detail" class="detail-view">
+                <div class="detail-header"><span class="back-to-dash" onclick="showDashboardHome()">← Back</span><h1 class="dashboard-title">Calendar</h1></div>
+                <div class="list-section"><div class="list-title">March 2026</div><div class="calendar-grid" id="calendar"></div></div>
+                <div class="list-section"><div class="list-title">Upcoming Events</div><div id="events-list"></div></div>
+            </div>
+            
+            <div id="settings-detail" class="detail-view">
+                <div class="detail-header"><span class="back-to-dash" onclick="showDashboardHome()">← Back</span><h1 class="dashboard-title">Settings</h1></div>
+                <div class="settings-section">
+                    <div class="settings-title">Account</div>
+                    <div class="settings-item"><div><div class="settings-label">Email</div><div class="settings-desc">ryan@example.com</div></div><button class="disconnect-btn" onclick="disconnect()">Disconnect</button></div>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-title">Preferences</div>
+                    <div class="settings-item"><div><div class="settings-label">Dark Mode</div><div class="settings-desc">Use dark theme</div></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div>
+                    <div class="settings-item"><div><div class="settings-label">Email Notifications</div><div class="settings-desc">Get alerts for new insights</div></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div>
+                    <div class="settings-item"><div><div class="settings-label">Weekly Summary</div><div class="settings-desc">Receive weekly digest</div></div><div class="toggle" onclick="this.classList.toggle('active')"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Custom Dashboard</h2>
+                <button class="modal-close" onclick="closeCreateModal()">×</button>
+            </div>
+            <div class="dashboard-options">
+                <div class="dashboard-option" data-type="fitness" onclick="selectDashboard(this)"><div class="dashboard-option-icon">💪</div><div class="dashboard-option-name">Fitness</div>
+                <div class="dashboard-option" data-type="food" onclick="selectDashboard(this)"><div class="dashboard-option-icon">🍔</div><div class="dashboard-option-name">Food & Dining</div></div>
+                <div class="dashboard-option" data-type="shopping" onclick="selectDashboard(this)"><div class="dashboard-option-icon">🛍️</div><div class="dashboard-option-name">Shopping</div></div>
+                <div class="dashboard-option" data-type="work" onclick="selectDashboard(this)"><div class="dashboard-option-icon">💼</div><div class="dashboard-option-name">Work</div></div>
+            </div>
+            <button class="ai-build-btn" onclick="createDashboard()">✨ Create with AI</button>
+        </div>
+    </div>
+
+    <script>
+        const spendingCategories = [
+            { name: 'Food & Dining', amount: 847, color: '#f97316', purchases: [{ merchant: 'Whole Foods', amount: 156 }, { merchant: 'Chipotle', amount: 24 }, { merchant: 'DoorDash', amount: 67 }] },
+            { name: 'Shopping', amount: 623, color: '#f472b6', purchases: [{ merchant: 'Amazon', amount: 234 }, { merchant: 'Target', amount: 89 }] },
+            { name: 'Transportation', amount: 412, color: '#6366f1', purchases: [{ merchant: 'Uber', amount: 124 }, { merchant: 'Gas', amount: 88 }] },
+           Entertainment', amount { name: ': 358, color: '#10b981', purchases: [{ merchant: 'Netflix', amount: 15 }, { merchant: 'Spotify', amount: 10 }] },
+            { name: 'Utilities', amount: 607, color: '#a855f7', purchases: [{ merchant: 'Electric', amount: 145 }, { merchant: 'Internet', amount: 89 }] }
+        ];
+
+        const subscriptions = [
+            { name: 'Netflix', price: 15, period: 'monthly', nextBilling: 'Mar 15' },
+            { name: 'Spotify', price: 10, period: 'monthly', nextBilling: 'Mar 12' },
+            { name: 'Amazon Prime', price: 14, period: 'monthly', nextBilling: 'Mar 20' },
+            { name: 'iCloud+', price: 3, period: 'monthly', nextBilling: 'Mar 18' },
+            { name: 'Notion', price: 10, period: 'monthly', nextBilling: 'Mar 25' },
+            { name: 'GitHub Pro', price: 4, period: 'monthly', nextBilling: 'Mar 22' },
+            { name: 'Figma', price: 15, period: 'monthly', nextBilling: 'Mar 28' },
+            { name: 'ChatGPT', price: 20, period: 'monthly', nextBilling: 'Mar 30' }
+        ];
+
+        const trips = [
+            { destination: 'Tokyo, Japan', dates: 'Mar 22-29', airline: 'United', confirmation: 'TK2947' },
+            { destination: 'New York, NY', dates: 'Apr 15-18', airline: 'Delta', confirmation: 'DL1882' }
+        ];
+
+        const events = [
+            { name: 'Team Standup', time: '9:00 AM', source: 'Google Calendar', date: 9 },
+            { name: 'Lunch with Sarah', time: '12:30 PM', source: 'Email', date: 12 },
+            { name: 'Dentist', time: '3:00 PM', source: 'Email', date: 18 },
+            { name: 'Flight to Tokyo', time: '10:00 AM', source: 'Email', date: 22 }
+        ];
+
+        let selectedDashboardType = null;
+
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screen).classList.add('active');
+        }
+
+        function showDashboardHome() {
+            document.querySelectorAll('.detail-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('dash-home').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item:first-child').classList.add('active');
+            renderCustomDashboards();
+        }
+
+        function showDetail(detail) {
+            document.querySelectorAll('.detail-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(detail + '-detail').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const navMap = { spending: 1, subscriptions: 2, travel: 3, calendar: 4, settings: 5 };
+            document.querySelectorAll('.nav-item')[navMap[detail]].classList.add('active');
+            if (detail === 'spending') renderSpending();
+            if (detail === 'subscriptions') renderSubscriptions();
+            if (detail === 'travel') renderTravel();
+            if (detail === 'calendar') renderCalendar();
+        }
+
+        function connectProvider(provider) {
+            showScreen('processing');
+            setTimeout(() => { showScreen('dashboard-view'); showDashboardHome(); }, 3000);
+        }
+
+        function renderSpending() {
+            const container = document.getElementById('spending-categories');
+            container.innerHTML = spendingCategories.map((cat, i) => `
+                <div class="category-item" onclick="toggleCategory(this)">
+                    <div class="list-item">
+                        <div class="list-icon" style="background: ${cat.color}20; color: ${cat.color}">${cat.name[0]}</div>
+                        <div class="list-content"><div class="list-name">${cat.name}</div><div class="list-detail">${cat.purchases.length} purchases</div></div>
+                        <div class="list-amount">$${cat.amount}</div>
+                    </div>
+                    <div class="top-purchases">
+                        ${cat.purchases.map(p => `<div class="purchase-item"><span class="purchase-merchant">${p.merchant}</span><span class="purchase-amount">$${p.amount}</span></div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+            initSpendingChart();
+        }
+
+        function toggleCategory(el) {
+            el.classList.toggle('active');
+            el.querySelector('.top-purchases').classList.toggle('expanded');
+        }
+
+        function initSpendingChart() {
+            const ctx = document.getElementById('spendingChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: spendingCategories.map(c => c.name), datasets: [{ data: spendingCategories.map(c => c.amount), backgroundColor: spendingCategories.map(c => c.color), borderWidth: 0 }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+            });
+        }
+
+        function renderSubscriptions() {
+            const container = document.getElementById('subscriptions-list');
+            container.innerHTML = subscriptions.map(sub => `
+                <div class="list-item">
+                    <div class="list-icon" style="background: rgba(99, 102, 241, 0.2); color: #818cf8">${sub.name[0]}</div>
+                    <div class="list-content"><div class="list-name">${sub.name}</div><div class="list-detail">Next: ${sub.nextBilling}</div></div>
+                    <div style="display: flex; align-items: center;"><span class="sub-badge sub-active">Active</span><button class="cancel-btn" onclick="cancelSubscription('${sub.name}')">Cancel</button></div>
+                </div>
+            `).join('');
+        }
+
+        function cancelSubscription(name) {
+            if (confirm('Cancel ' + name + '? This is a demo - no real cancellation.')) {
+                alert(name + ' subscription marked for cancellation.');
+            }
+        }
+
+        function renderTravel() {
+            const container = document.getElementById('trips-list');
+            container.innerHTML = trips.map(trip => `
+                <div class="trip-card">
+                    <div class="trip-dates"><div class="trip-month">${trip.dates.split('-')[0].replace('Mar', '').replace('Apr', '')}</div><div class="trip-day">${trip.dates.match(/\d+/)[0]}</div></div>
+                    <div><div class="trip-destination">${trip.destination}</div><div class="trip-details">${trip.airline} • ${trip.confirmation}</div></div>
+                </div>
+            `).join('');
+        }
+
+        function renderCalendar() {
+            const container = document.getElementById('calendar');
+            let html = 'Sun Mon Tue Wed Thu Fri Sat'.split(' ').map(d => '<div class="calendar-header">' + d + '</div>').join('');
+            for (let i = 1; i <= 31; i++) {
+                const isToday = i === 8;
+                const hasEvent = events.some(e => e.date === i);
+                html += '<div class="calendar-day' + (isToday ? ' today' : '') + (hasEvent ? ' has-event' : '') + '">' + i + '</div>';
+            }
+            container.innerHTML = html;
+            document.getElementById('events-list').innerHTML = events.map(e => '<div class="event-item"><div class="event-time">' + e.time + '</div><div><div class="event-name">' + e.name + '</div><div class="event-source">' + e.source + '</div></div></div>').join('');
+        }
+
+        function openCreateModal() { document.getElementById('createModal').classList.add('active'); selectedDashboardType = null; document.querySelectorAll('.dashboard-option').forEach(o => o.classList.remove('selected')); }
+        function closeCreateModal() { document.getElementById('createModal').classList.remove('active'); }
+        function selectDashboard(el) { document.querySelectorAll('.dashboard-option').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); selectedDashboardType = el.dataset.type; }
+
+        function createDashboard() {
+            const dashboards = JSON.parse(localStorage.getItem('customDashboards') || '[]');
+            const icons = { fitness: '💪', food: '🍔', shopping: '🛍️', work: '💼' };
+            const names = { fitness: 'Fitness', food: 'Food & Dining', shopping: 'Shopping', work: 'Work' };
+            const type = selectedDashboardType || ['fitness', 'food', 'shopping', 'work'][Math.floor(Math.random() * 4)];
+            dashboards.push({ id: Date.now(), type, icon: icons[type], name: names[type] });
+            localStorage.setItem('customDashboards', JSON.stringify(dashboards));
+            closeCreateModal();
+            renderCustomDashboards();
+            alert('Dashboard created!');
+        }
+
+        function renderCustomDashboards() {
+            const dashboards = JSON.parse(localStorage.getItem('customDashboards') || '[]');
+            const container = document.getElementById('customDashboards');
+            if (dashboards.length === 0) { container.innerHTML = ''; return; }
+            container.innerHTML = '<div class="custom-dash-header"><h3 class="custom-dash-title">Your Custom Dashboards</h3></div><div class="custom-dash-grid">' + dashboards.map(d => '<div class="custom-dash-card"><div class="custom-dash-icon">' + d.icon + '</div><div class="custom-dash-name">' + d.name + '</div><button class="custom-dash-delete" onclick="deleteDashboard(' + d.id + ')">×</button></div>').join('') + '</div>';
+        }
+
+        function deleteDashboard(id) {
+            const dashboards = JSON.parse(localStorage.getItem('customDashboards') || '[]');
+            localStorage.setItem('customDashboards', JSON.stringify(dashboards.filter(d => d.id !== id)));
+            renderCustomDashboards();
+        }
+
+        function disconnect() { if (confirm('Disconnect your email account?')) showScreen('landing'); }
+        document.addEventListener('DOMContentLoaded', () => { renderCustomDashboards(); });
+    </script>
+</body>
+</html>
