@@ -323,7 +323,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="createModal">
+    <div class="modal-overlay" id="createModal" onclick="if(event.target === this) closeCreateModal()">
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title">Create Custom Dashboard</h2>
@@ -558,6 +558,8 @@
             document.getElementById('sidebar').classList.toggle('open');
             document.querySelector('.hamburger-overlay').classList.toggle('active');
         }
+        
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCreateModal(); });
         
         // Button event listeners
         document.getElementById('connectBtn').addEventListener('click', function() { showScreen('providers'); });
