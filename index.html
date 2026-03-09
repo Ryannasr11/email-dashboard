@@ -191,7 +191,8 @@
             <div class="logo">📧</div>
             <h1>MailSight</h1>
             <p>Transform your inbox into actionable insights. Connect your email to discover spending, subscriptions, travel, and events.</p>
-            <button class="btn" onclick="showScreen('providers')">Connect Your Email</button>
+            <button class="btn" id="connectBtn">Connect Your Email</button>
+        <script>document.getElementById('connectBtn').addEventListener('click', function() { showScreen('providers'); });</script>
         </div>
     </div>
 
@@ -200,10 +201,16 @@
             <h2>Choose Your Provider</h2>
             <p>Select your email service</p>
             <div class="provider-grid">
-                <button class="provider-btn" onclick="connectProvider('Gmail')"><span>📬</span><span>Gmail</span></button>
-                <button class="provider-btn" onclick="connectProvider('Outlook')"><span>📨</span><span>Outlook</span></button>
-                <button class="provider-btn" onclick="connectProvider('Yahoo')"><span>📯</span><span>Yahoo</span></button>
-                <button class="provider-btn" onclick="connectProvider('iCloud')"><span>☁️</span><span>iCloud</span></button>
+                <button class="provider-btn" id="gmailBtn"><span>📬</span><span>Gmail</span></button>
+                <button class="provider-btn" id="outlookBtn"><span>📨</span><span>Outlook</span></button>
+                <button class="provider-btn" id="yahooBtn"><span>📯</span><span>Yahoo</span></button>
+                <button class="provider-btn" id="icloudBtn"><span>☁️</span><span>iCloud</span></button>
+                <script>
+                    document.getElementById('gmailBtn').onclick = function() { connectProvider('Gmail'); };
+                    document.getElementById('outlookBtn').onclick = function() { connectProvider('Outlook'); };
+                    document.getElementById('yahooBtn').onclick = function() { connectProvider('Yahoo'); };
+                    document.getElementById('icloudBtn').onclick = function() { connectProvider('iCloud'); };
+                </script>
             </div>
             <button class="back-btn" onclick="showScreen('landing')">← Back</button>
         </div>
