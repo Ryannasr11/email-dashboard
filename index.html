@@ -315,8 +315,8 @@
                 </div>
                 <div class="settings-section">
                     <div class="settings-title">Preferences</div>
-                    <div class="settings-item"><div><div class="settings-label">Dark Mode</div><div class="settings-desc">Use dark theme</div></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div>
-                    <div class="settings-item"><div><div class="settings-label">Email Notifications</div><div class="settings-desc">Get alerts for new insights</div></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div>
+                    <div class="settings-item"><div><div class="settings-label">Dark Mode</div><div class="settings-desc">Use dark theme</div></div><div class="toggle active" id="toggleDarkMode" onclick="toggleSetting('darkMode', this)"></div></div>
+                    <div class="settings-item"><div><div class="settings-label">Email Notifications</div><div class="settings-desc">Get alerts for new insights</div></div><div class="toggle active" id="toggleNotifications" onclick="toggleSetting('notifications', this)"></div></div>
                     <div class="settings-item"><div><div class="settings-label">Weekly Summary</div><div class="settings-desc">Receive weekly digest</div></div><div class="toggle" onclick="this.classList.toggle('active')"></div></div>
                 </div>
             </div>
@@ -385,6 +385,7 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.querySelector('.nav-item:first-child').classList.add('active');
             renderCustomDashboards();
+            closeSidebarMobile();
         }
 
         function showDetail(detail) {
@@ -394,6 +395,7 @@
             const navMap = { spending: 1, subscriptions: 2, travel: 3, calendar: 4, settings: 5 };
             document.querySelectorAll('.nav-item')[navMap[detail]].classList.add('active');
             if (detail === 'spending') renderSpending();
+            closeSidebarMobile();
             if (detail === 'subscriptions') renderSubscriptions();
             if (detail === 'travel') renderTravel();
             if (detail === 'calendar') renderCalendar();
@@ -557,6 +559,29 @@
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.querySelector('.hamburger-overlay').classList.toggle('active');
+        }
+        
+        // Settings toggles with state persistence
+        function toggleSetting(key, el) {
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            settings[key] = !settings[key];
+            localStorage.setItem('settings', JSON.stringify(settings));
+            el.classList.toggle('active');
+        }
+        
+        // Load settings on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            if (settings.darkMode === false) document.getElementById('toggleDarkMode')?.classList.remove('active');
+            if (settings.notifications === false) document.getElementById('toggleNotifications')?.classList.remove('active');
+        });
+        
+        // Close sidebar on mobile when navigating
+        function closeSidebarMobile() {
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.querySelector('.hamburger-overlay')?.classList.remove('active');
+            }
         }
         
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCreateModal(); });
