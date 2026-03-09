@@ -192,7 +192,6 @@
             <h1>MailSight</h1>
             <p>Transform your inbox into actionable insights. Connect your email to discover spending, subscriptions, travel, and events.</p>
             <button class="btn" id="connectBtn">Connect Your Email</button>
-        <script>document.getElementById('connectBtn').addEventListener('click', function() { showScreen('providers'); });</script>
         </div>
     </div>
 
@@ -205,12 +204,6 @@
                 <button class="provider-btn" id="outlookBtn"><span>📨</span><span>Outlook</span></button>
                 <button class="provider-btn" id="yahooBtn"><span>📯</span><span>Yahoo</span></button>
                 <button class="provider-btn" id="icloudBtn"><span>☁️</span><span>iCloud</span></button>
-                <script>
-                    document.getElementById('gmailBtn').onclick = function() { connectProvider('Gmail'); };
-                    document.getElementById('outlookBtn').onclick = function() { connectProvider('Outlook'); };
-                    document.getElementById('yahooBtn').onclick = function() { connectProvider('Yahoo'); };
-                    document.getElementById('icloudBtn').onclick = function() { connectProvider('iCloud'); };
-                </script>
             </div>
             <button class="back-btn" onclick="showScreen('landing')">← Back</button>
         </div>
@@ -494,6 +487,14 @@
         }
 
         function disconnect() { if (confirm('Disconnect your email account?')) showScreen('landing'); }
+        
+        // Button event listeners
+        document.getElementById('connectBtn').addEventListener('click', function() { showScreen('providers'); });
+        document.getElementById('gmailBtn').addEventListener('click', function() { connectProvider('Gmail'); });
+        document.getElementById('outlookBtn').addEventListener('click', function() { connectProvider('Outlook'); });
+        document.getElementById('yahooBtn').addEventListener('click', function() { connectProvider('Yahoo'); });
+        document.getElementById('icloudBtn').addEventListener('click', function() { connectProvider('iCloud'); });
+        
         document.addEventListener('DOMContentLoaded', () => { renderCustomDashboards(); });
     </script>
 </body>
