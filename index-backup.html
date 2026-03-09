@@ -21,8 +21,7 @@
         
         #landing { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; overflow: hidden; }
         #landing::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.15), transparent 50%), radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.15), transparent 50%); }
-        .logo { width: 80px; height: 80px; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite; position: relative; }
-        .logo svg { width: 100%; height: 100%; }
+        .logo { font-size: 4rem; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite; position: relative; }
         .landing { position: relative; z-index: 1; }
         .landing h1 { color: white; font-size: 3rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: fadeInUp 0.6s ease-out 0.2s both; }
         .landing p { color: rgba(255,255,255,0.8); font-size: 1.15rem; margin-bottom: 2rem; line-height: 1.7; max-width: 520px; animation: fadeInUp 0.6s ease-out 0.4s both; }
@@ -51,7 +50,6 @@
         .provider-btn { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem; background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; cursor: pointer; transition: all 0.3s; }
         .provider-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
         .provider-btn span:first-child { font-size: 2rem; }
-        .provider-icon svg { width: 32px; height: 32px; color: var(--text-primary); }
         .provider-btn span:last-child { font-weight: 600; }
         .back-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; margin-top: 1.5rem; }
         
@@ -84,8 +82,7 @@
         .avatar { width: 42px; height: 42px; border-radius: 12px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
         .user-name { font-weight: 600; font-size: 0.95rem; }
         .user-email { font-size: 0.8rem; color: var(--text-muted); }
-        .main-content { margin-left: 260px; padding: 2rem; min-height: 100vh; max-width: calc(100% - 260px); }
-        .main-content-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
+        .main-content { margin-left: 260px; padding: 2rem; min-height: 100vh; }
         
         .dashboard-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
         .dashboard-title { font-size: 1.75rem; font-weight: 700; }
@@ -206,12 +203,7 @@
 <body>
     <div id="landing" class="screen active">
         <div class="landing">
-            <div class="logo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                    <rect x="3" y="5" width="18" height="14" rx="2"/>
-                    <path d="M3 7l9 6 9-6"/>
-                </svg>
-            </div>
+            <div class="logo">📧</div>
             <h1>MailSight</h1>
             <p>Transform your inbox into actionable insights. Connect your email to discover spending, subscriptions, travel, and events.</p>
             <button class="btn" id="connectBtn">Connect Your Email</button>
@@ -223,10 +215,10 @@
             <h2>Choose Your Provider</h2>
             <p>Select your email service</p>
             <div class="provider-grid">
-                <button class="provider-btn" id="gmailBtn"><span class="provider-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span>Gmail</span></button>
-                <button class="provider-btn" id="outlookBtn"><span class="provider-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span>Outlook</span></button>
-                <button class="provider-btn" id="yahooBtn"><span class="provider-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span>Yahoo</span></button>
-                <button class="provider-btn" id="icloudBtn"><span class="provider-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12l3 3 5-6"/></svg></span><span>iCloud</span></button>
+                <button class="provider-btn" id="gmailBtn"><span>📬</span><span>Gmail</span></button>
+                <button class="provider-btn" id="outlookBtn"><span>📨</span><span>Outlook</span></button>
+                <button class="provider-btn" id="yahooBtn"><span>📯</span><span>Yahoo</span></button>
+                <button class="provider-btn" id="icloudBtn"><span>☁️</span><span>iCloud</span></button>
             </div>
             <button class="back-btn" onclick="showScreen('landing')">← Back</button>
         </div>
@@ -267,7 +259,6 @@
         </div>
         
         <div class="main-content">
-            <div class="main-content-inner">
             <div id="dash-home" class="detail-view active">
                 <div class="dashboard-header">
                     <h1 class="dashboard-title">Your Dashboard</h1>
