@@ -130,7 +130,7 @@
         .category-item { cursor: pointer; transition: all 0.3s; border-radius: 12px; }
         .category-item:hover { background: var(--bg-card-hover); transform: translateX(6px); }
         .category-item.active { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary-light); }
-        .top-purchases { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s; }
+        .top-purchases { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin-top 0.3s ease-out; }
         .top-purchases.expanded { max-height: 500px; opacity: 1; margin-top: 1rem; }
         .purchase-item { display: flex; justify-content: space-between; padding: 0.75rem 1rem; background: #111827; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .purchase-merchant { color: var(--text-secondary); }
@@ -183,6 +183,21 @@
         .custom-dash-name { font-weight: 600; }
         .custom-dash-delete { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: var(--red); cursor: pointer; font-size: 1.25rem; opacity: 0; transition: opacity 0.2s; }
         .custom-dash-card:hover .custom-dash-delete { opacity: 1; }
+        
+        /* Mobile responsiveness */
+        .hamburger { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; cursor: pointer; color: var(--text-primary); font-size: 1.25rem; }
+        .hamburger-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+        .hamburger-overlay.active { display: block; }
+        
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1rem; padding-top: 4rem; }
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .dashboard-title { font-size: 1.25rem; }
+        }
     </style>
 </head>
 <body>
@@ -225,7 +240,9 @@
     </div>
 
     <div id="dashboard-view" class="screen">
-        <div class="sidebar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="hamburger-overlay" onclick="toggleSidebar()"></div>
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-logo">📧 MailSight</div>
             <div class="nav-item active" onclick="showDashboardHome()"><span>🏠</span> Home</div>
             <div class="nav-item" onclick="showDetail('spending')"><span>💳</span> Spending</div>
@@ -355,6 +372,7 @@
         ];
 
         let selectedDashboardType = null;
+        let spendingChartInstance = null;
 
         function showScreen(screen) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -411,10 +429,35 @@
         function initSpendingChart() {
             const ctx = document.getElementById('spendingChart');
             if (!ctx) return;
-            new Chart(ctx, {
+            
+            // Expand all categories function
+            window.expandAllCategories = function() {
+                document.querySelectorAll('.category-item').forEach(item => {
+                    item.classList.add('active');
+                    item.querySelector('.top-purchases').classList.add('expanded');
+                });
+            };
+            
+            const chart = new Chart(ctx, {
                 type: 'doughnut',
                 data: { labels: spendingCategories.map(c => c.name), datasets: [{ data: spendingCategories.map(c => c.amount), backgroundColor: spendingCategories.map(c => c.color), borderWidth: 0 }] },
-                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+                options: { 
+                    responsive: true, 
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { color: '#94a3b8' } } 
+                    },
+                    onClick: function() {
+                        window.expandAllCategories();
+                    }
+                }
+            });
+            
+            // Add click to chart canvas for alert/expand
+            ctx.style.cursor = 'pointer';
+            ctx.addEventListener('click', function() {
+                // Show alert first, then expand
+                alert('Click on categories below to see purchases');
+                window.expandAllCategories();
             });
         }
 
@@ -477,7 +520,11 @@
             const dashboards = JSON.parse(localStorage.getItem('customDashboards') || '[]');
             const container = document.getElementById('customDashboards');
             if (dashboards.length === 0) { container.innerHTML = ''; return; }
-            container.innerHTML = '<div class="custom-dash-header"><h3 class="custom-dash-title">Your Custom Dashboards</h3></div><div class="custom-dash-grid">' + dashboards.map(d => '<div class="custom-dash-card"><div class="custom-dash-icon">' + d.icon + '</div><div class="custom-dash-name">' + d.name + '</div><button class="custom-dash-delete" onclick="deleteDashboard(' + d.id + ')">×</button></div>').join('') + '</div>';
+            container.innerHTML = '<div class="custom-dash-header"><h3 class="custom-dash-title">Your Custom Dashboards</h3></div><div class="custom-dash-grid">' + dashboards.map(d => '<div class="custom-dash-card" onclick="openCustomDashboard(\'' + d.name + '\')"><div class="custom-dash-icon">' + d.icon + '</div><div class="custom-dash-name">' + d.name + '</div><button class="custom-dash-delete" onclick="deleteDashboard(' + d.id + ')">×</button></div>').join('') + '</div>';
+        }
+
+        function openCustomDashboard(name) {
+            alert('Custom dashboard: ' + name + ' - Coming soon!');
         }
 
         function deleteDashboard(id) {
