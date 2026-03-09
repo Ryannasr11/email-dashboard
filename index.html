@@ -116,8 +116,21 @@
         .stat-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
         .stat-value { font-size: 1.5rem; font-weight: 700; }
         
-        .chart-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; max-width: 380px; }
+        .chart-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; flex: 1; min-width: 300px; min-height: 340px; display: flex; flex-direction: column; }
+        .chart-container canvas { flex: 1; }
         .chart-title { font-weight: 600; margin-bottom: 1rem; }
+        
+        .insights-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; flex: 1; min-width: 280px; }
+        .insights-title { font-weight: 600; margin-bottom: 1.25rem; font-size: 1.1rem; }
+        .insight-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+        .insight-item:last-child { border-bottom: none; }
+        .insight-label { color: var(--text-secondary); font-size: 0.9rem; }
+        .insight-value { font-weight: 700; font-size: 1.1rem; }
+        .insight-value.positive { color: var(--green); }
+        .insight-value.negative { color: var(--red); }
+        .insight-change { display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; }
+        
+        .chart-insights-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
         
         .list-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
         .list-title { font-weight: 600; margin-bottom: 1rem; }
@@ -200,7 +213,9 @@
             .main-content-inner { max-width: 100%; padding: 0; }
             .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; }
             .stats-row { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-            .chart-container { max-width: 100%; }
+            .chart-insights-row { flex-direction: column; }
+            .chart-container { min-width: 100%; min-height: 300px; }
+            .insights-panel { min-width: 100%; }
             .nav-item { padding: 1rem; }
             .modal { padding: 1.25rem; }
             .dashboard-title { font-size: 1.25rem; }
@@ -294,7 +309,28 @@
                     <div class="stat-card"><div class="stat-label">Avg. Daily</div><div class="stat-value">$95</div></div>
                     <div class="stat-card"><div class="stat-label">Budget</div><div class="stat-value">$3,500</div></div>
                 </div>
-                <div class="chart-container"><div class="chart-title">Spending by Category</div><canvas id="spendingChart"></canvas></div>
+                <div class="chart-insights-row">
+                    <div class="chart-container"><div class="chart-title">Spending by Category</div><canvas id="spendingChart"></canvas></div>
+                    <div class="insights-panel">
+                        <div class="insights-title">📊 Insights</div>
+                        <div class="insight-item">
+                            <span class="insight-label">Total Transactions</span>
+                            <span class="insight-value">47</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-label">Avg. Transaction</span>
+                            <span class="insight-value">$60.57</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-label">Highest Category</span>
+                            <span class="insight-value">Food & Dining</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-label">Month-over-Month</span>
+                            <span class="insight-value negative"><span class="insight-change">📉 -8.9%</span></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="list-section"><div class="list-title">Categories (click to expand)</div><div id="spending-categories"></div></div>
             </div>
             
@@ -457,7 +493,8 @@
                 type: 'doughnut',
                 data: { labels: spendingCategories.map(c => c.name), datasets: [{ data: spendingCategories.map(c => c.amount), backgroundColor: spendingCategories.map(c => c.color), borderWidth: 0 }] },
                 options: { 
-                    responsive: true, 
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { 
                         legend: { position: 'bottom', labels: { color: '#94a3b8' } },
                         tooltip: {
